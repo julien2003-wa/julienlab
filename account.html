@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#07131f">
+  <title>Mon compte — JulienLab</title>
+  <style>
+    :root{--bg:#06111b;--surface:#0a1b27;--surface2:#102532;--ink:#effaff;--muted:#92a9b8;--line:rgba(157,201,220,.16);--cyan:#45d5da;--green:#6ce5a4;--red:#ff7b76;--amber:#ffc766}
+    *{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(circle at 70% -10%,rgba(69,213,218,.16),transparent 34rem),linear-gradient(145deg,#07141f,var(--bg));color:var(--ink);font-family:Inter,system-ui,sans-serif}
+    a{color:inherit}.page{width:min(980px,calc(100% - 28px));margin:0 auto;padding:28px 0 50px}.top{display:flex;justify-content:space-between;align-items:center;gap:14px;margin-bottom:24px}.brand{display:flex;align-items:center;gap:10px;text-decoration:none}.mark{width:42px;height:42px;border:1px solid rgba(69,213,218,.35);border-radius:13px;display:grid;place-items:center;color:var(--cyan);background:rgba(69,213,218,.09)}.brand strong,.brand small{display:block}.brand small{color:var(--muted);font-size:.75rem}.back{padding:9px 12px;border:1px solid var(--line);border-radius:10px;text-decoration:none;color:var(--muted)}
+    .hero{padding:24px;border:1px solid var(--line);border-radius:20px;background:linear-gradient(145deg,rgba(14,38,51,.94),rgba(8,25,36,.91));box-shadow:0 22px 55px rgba(0,0,0,.25);margin-bottom:16px}.hero h1{margin:0 0 8px;font-size:clamp(1.5rem,4vw,2.3rem)}.hero p{margin:0;color:var(--muted);max-width:720px;line-height:1.55}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.card{padding:20px;border:1px solid var(--line);border-radius:16px;background:rgba(10,27,39,.9)}.card h2{margin:0 0 6px;font-size:1rem}.card p{margin:0 0 14px;color:var(--muted);font-size:.88rem;line-height:1.45}.field{margin-top:11px}.field label{display:block;margin-bottom:5px;color:var(--muted);font-size:.78rem;font-weight:700}.field input{width:100%;height:42px;padding:0 11px;border:1px solid var(--line);border-radius:10px;color:var(--ink);background:#0c2130;outline:none}.field input:focus{border-color:rgba(69,213,218,.55);box-shadow:0 0 0 3px rgba(69,213,218,.08)}button{width:100%;min-height:43px;margin-top:14px;border:1px solid rgba(69,213,218,.35);border-radius:10px;color:#041719;background:linear-gradient(135deg,#6be6df,#43c5db);font-weight:900;cursor:pointer}.secondary{color:var(--muted);background:rgba(255,255,255,.025);border-color:var(--line)}
+    .notice{display:none;margin-top:12px;padding:10px 11px;border-radius:9px;font-size:.82rem}.notice.show{display:block}.notice.ok{color:var(--green);border:1px solid rgba(108,229,164,.25);background:rgba(108,229,164,.07)}.notice.error{color:var(--red);border:1px solid rgba(255,123,118,.25);background:rgba(255,123,118,.07)}
+    .account{display:none}.account.visible{display:block}.auth.hidden{display:none}.status{margin-top:14px;padding:14px;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.02)}.status strong{display:block;margin-bottom:4px}.status span{color:var(--muted);font-size:.86rem}.premium{border-color:rgba(108,229,164,.28);background:rgba(108,229,164,.06)}.premium strong{color:var(--green)}.code{font-family:Consolas,monospace;letter-spacing:.04em;text-transform:uppercase}.rules{margin-top:16px;padding:14px;border:1px solid rgba(255,199,102,.2);border-radius:12px;background:rgba(255,199,102,.055);color:#ddc99c;font-size:.82rem;line-height:1.5}.muted{color:var(--muted);font-size:.8rem;margin-top:12px}
+    @media(max-width:760px){.grid{grid-template-columns:1fr}.top{align-items:flex-start}.back{font-size:.8rem}}
+  </style>
+</head>
+<body>
+<main class="page">
+  <div class="top"><a class="brand" href="./index.html"><span class="mark">⚗</span><span><strong>JulienLab</strong><small>Mon compte</small></span></a><a class="back" href="./index.html">← Retour au laboratoire</a></div>
+  <section class="hero"><h1>Compte JulienLab</h1><p>Une adresse email correspond à un seul compte. Chaque clé d’activation est utilisable une seule fois et devient définitivement liée au compte qui l’active.</p></section>
+
+  <section class="grid auth" id="authArea">
+    <article class="card"><h2>Se connecter</h2><p>Retrouve ton abonnement et tes accès JulienLab.</p><form id="loginForm"><div class="field"><label>Email</label><input type="email" name="email" autocomplete="email" required></div><div class="field"><label>Mot de passe</label><input type="password" name="password" autocomplete="current-password" required></div><button type="submit">Se connecter</button></form><div class="notice" id="loginNotice"></div></article>
+    <article class="card"><h2>Créer mon compte</h2><p>Utilise l’adresse email que tu souhaites conserver pour JulienLab.</p><form id="registerForm"><div class="field"><label>Email</label><input type="email" name="email" autocomplete="email" required></div><div class="field"><label>Mot de passe</label><input type="password" name="password" minlength="8" autocomplete="new-password" required></div><div class="field"><label>Confirmer le mot de passe</label><input type="password" name="confirm" minlength="8" autocomplete="new-password" required></div><button type="submit">Créer le compte</button></form><div class="notice" id="registerNotice"></div></article>
+  </section>
+
+  <section class="account" id="accountArea">
+    <div class="grid">
+      <article class="card"><h2>Mon abonnement</h2><p id="accountEmail"></p><div class="status" id="subscriptionStatus"></div><button class="secondary" type="button" id="logoutBtn">Se déconnecter</button></article>
+      <article class="card"><h2>Activer une clé</h2><p>Une nouvelle clé peut aussi servir à renouveler le même compte. Les jours restants sont conservés.</p><form id="activateForm"><div class="field"><label>Clé JulienLab</label><input class="code" name="code" placeholder="JL-M-XXXX-XXXX-XXXX" autocomplete="off" required></div><button type="submit">Activer l’abonnement</button></form><div class="notice" id="activateNotice"></div><div class="rules">Mensuel : +30 jours. Annuel : +365 jours. Si ton abonnement est encore actif, la nouvelle durée est ajoutée à la date d’expiration actuelle.</div></article>
+    </div>
+  </section>
+</main>
+<script>
+const $=id=>document.getElementById(id);
+function notice(id,msg,ok=false){const el=$(id);el.textContent=msg;el.className='notice show '+(ok?'ok':'error');}
+async function api(url,options={}){const r=await fetch(url,{credentials:'same-origin',headers:{'Content-Type':'application/json',...(options.headers||{})},...options});let data={};try{data=await r.json()}catch{}if(!r.ok)throw new Error(data.error||'Une erreur est survenue.');return data;}
+function renderUser(data){const user=data.user;const logged=!!data.authenticated;$('authArea').classList.toggle('hidden',logged);$('accountArea').classList.toggle('visible',logged);if(!logged)return;$('accountEmail').textContent=user.email;const st=$('subscriptionStatus');if(user.premium){st.className='status premium';st.innerHTML='<strong>JulienLab Premium actif</strong><span>Accès jusqu’au '+new Date(user.premiumUntil).toLocaleDateString('fr-FR')+'</span>';}else{st.className='status';st.innerHTML='<strong>Aucun abonnement actif</strong><span>Entre une clé mensuelle ou annuelle pour débloquer JulienLab Premium.</span>';}}
+async function refresh(){try{renderUser(await api('/api/me'));}catch{renderUser({authenticated:false});}}
+$('loginForm').addEventListener('submit',async e=>{e.preventDefault();const f=new FormData(e.currentTarget);try{await api('/api/login',{method:'POST',body:JSON.stringify({email:f.get('email'),password:f.get('password')})});notice('loginNotice','Connexion réussie.',true);await refresh();}catch(err){notice('loginNotice',err.message);}});
+$('registerForm').addEventListener('submit',async e=>{e.preventDefault();const f=new FormData(e.currentTarget);if(f.get('password')!==f.get('confirm'))return notice('registerNotice','Les mots de passe ne correspondent pas.');try{await api('/api/register',{method:'POST',body:JSON.stringify({email:f.get('email'),password:f.get('password')})});notice('registerNotice','Compte créé.',true);await refresh();}catch(err){notice('registerNotice',err.message);}});
+$('activateForm').addEventListener('submit',async e=>{e.preventDefault();const f=new FormData(e.currentTarget);try{const d=await api('/api/activate',{method:'POST',body:JSON.stringify({code:f.get('code')})});notice('activateNotice','Abonnement activé jusqu’au '+new Date(d.user.premiumUntil).toLocaleDateString('fr-FR')+'.',true);e.currentTarget.reset();await refresh();}catch(err){notice('activateNotice',err.message);}});
+$('logoutBtn').addEventListener('click',async()=>{try{await api('/api/logout',{method:'POST',body:'{}'});}catch{}await refresh();});
+refresh();
+</script>
+</body>
+</html>
