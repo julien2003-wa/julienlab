@@ -1,0 +1,20 @@
+JULIENLAB V7 — DÉMARRAGE
+
+1) Sur téléphone / aperçu local : ouvrir index.html.
+   - Si React/Vite n'est pas disponible, index.html bascule automatiquement vers preview-v7-portal.html.
+   - Depuis le portail, toucher « Laboratoire 3D » pour ouvrir l'aperçu Babylon.js.
+
+2) Pour la vraie application complète :
+   npm install
+   npm run dev
+   puis ouvrir l'adresse fournie par Vite.
+
+3) Pour Vercel :
+   npm run build
+   Le dossier dist/ est généré et Vercel sert la vraie application React.
+
+IMPORTANT : les fonctions comptes/classes/Neon nécessitent un serveur Vercel/API. Elles ne peuvent pas fonctionner en ouvrant seulement les fichiers localement.
+
+ÉCRAN DE LANCEMENT
+-------------------
+index.html affiche maintenant une animation de démarrage JulienLab (~3 s) avant l’application, comme une application mobile.

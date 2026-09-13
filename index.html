@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#05111b" />
+    <meta name="description" content="JulienLab V7 — laboratoire virtuel 3D de chimie pour Première C et Terminale C" />
+    <link rel="manifest" href="./manifest.webmanifest" />
+    <title>JulienLab V7</title>
+    <style>
+      :root{color-scheme:dark;--jl-bg:#06111b;--jl-bg2:#071b29;--jl-cyan:#55ddeb;--jl-blue:#5b8cff;--jl-ink:#effbff;--jl-muted:#92adbb}
+      *{box-sizing:border-box}
+      html,body,#root{min-height:100%;margin:0}
+      body{background:radial-gradient(circle at 50% -16%,rgba(85,221,235,.13),transparent 34rem),linear-gradient(155deg,#071925,var(--jl-bg));font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--jl-ink)}
+
+      /* Splash screen mobile-style. It lives outside #root so React may load behind it. */
+      #jl-splash{position:fixed;inset:0;z-index:99999;display:grid;place-items:center;overflow:hidden;background:
+        radial-gradient(circle at 50% 43%,rgba(69,213,218,.11),transparent 15rem),
+        linear-gradient(155deg,#081a27 0%,#06111b 58%,#040c13 100%);
+        opacity:1;visibility:visible;transition:opacity .52s ease,visibility .52s ease}
+      #jl-splash.jl-splash-exit{opacity:0;visibility:hidden;pointer-events:none}
+      .jl-splash-inner{position:relative;width:min(88vw,360px);display:grid;justify-items:center;text-align:center;transform:translateY(-2vh)}
+      .jl-logo-stage{position:relative;width:146px;height:146px;display:grid;place-items:center;margin-bottom:15px}
+      .jl-logo-glow{position:absolute;inset:20px;border-radius:50%;background:radial-gradient(circle,rgba(85,221,235,.18),rgba(85,221,235,.025) 55%,transparent 72%);filter:blur(2px);opacity:0;animation:jlGlow 2.65s cubic-bezier(.2,.7,.2,1) both}
+      .jl-orbit{position:absolute;inset:9px;border:1px solid rgba(85,221,235,.13);border-radius:50%;opacity:0;animation:jlOrbitReveal 2.65s ease both}
+      .jl-orbit::before,.jl-orbit::after{content:"";position:absolute;width:9px;height:9px;border-radius:50%;background:var(--jl-cyan);box-shadow:0 0 17px rgba(85,221,235,.8)}
+      .jl-orbit::before{left:11px;top:39px}.jl-orbit::after{right:17px;bottom:27px;background:#75a1ff;box-shadow:0 0 17px rgba(117,161,255,.72)}
+      .jl-orbit-a{animation:jlOrbitReveal 2.65s ease both,jlSpin 5.2s linear .4s infinite}
+      .jl-orbit-b{inset:24px;transform:rotate(68deg);border-color:rgba(117,161,255,.11);animation:jlOrbitReveal 2.65s ease both,jlSpinReverse 4.2s linear .55s infinite}
+      .jl-orbit-b::before{width:7px;height:7px;left:2px;top:43px;background:#9beefa}.jl-orbit-b::after{width:7px;height:7px;right:5px;bottom:37px;background:#59dbaa}
+      .jl-logo-mark{position:relative;width:82px;height:82px;display:grid;place-items:center;border:1px solid rgba(91,220,236,.33);border-radius:25px;color:#80ecf5;background:linear-gradient(145deg,rgba(85,221,235,.14),rgba(91,140,255,.055));box-shadow:inset 0 1px rgba(255,255,255,.08),0 18px 45px rgba(0,0,0,.26),0 0 0 0 rgba(85,221,235,.17);font-size:45px;line-height:1;opacity:0;transform:scale(.5) rotate(-10deg);animation:jlMark 1.15s cubic-bezier(.16,1,.3,1) .28s forwards}
+      .jl-logo-shine{position:absolute;inset:0;overflow:hidden;border-radius:25px;pointer-events:none}
+      .jl-logo-shine::after{content:"";position:absolute;top:-20%;left:-55%;width:34%;height:140%;transform:rotate(18deg);background:linear-gradient(90deg,transparent,rgba(255,255,255,.28),transparent);animation:jlShine .7s ease 1.03s both}
+      .jl-brand-name{margin:0;color:var(--jl-ink);font-size:34px;font-weight:880;letter-spacing:-.055em;opacity:0;transform:translateY(13px);animation:jlTextIn .7s cubic-bezier(.2,.8,.2,1) 1.04s forwards}
+      .jl-brand-name b{color:var(--jl-cyan);font-weight:900}
+      .jl-tagline{margin:5px 0 0;color:var(--jl-muted);font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;opacity:0;transform:translateY(7px);animation:jlTextIn .62s ease 1.34s forwards}
+      .jl-launch-line{position:relative;width:92px;height:2px;margin-top:25px;overflow:hidden;border-radius:99px;background:rgba(255,255,255,.07);opacity:0;animation:jlFade .3s ease 1.42s forwards}
+      .jl-launch-line::after{content:"";position:absolute;inset:0 auto 0 0;width:0;border-radius:inherit;background:linear-gradient(90deg,var(--jl-cyan),#6d92ff);box-shadow:0 0 12px rgba(85,221,235,.45);animation:jlLoad 1.05s cubic-bezier(.25,.75,.25,1) 1.52s forwards}
+      .jl-version{margin-top:13px;color:#557383;font-size:9px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;opacity:0;animation:jlFade .5s ease 1.58s forwards}
+
+      @keyframes jlMark{0%{opacity:0;transform:scale(.5) rotate(-10deg)}65%{opacity:1;transform:scale(1.06) rotate(2deg);box-shadow:inset 0 1px rgba(255,255,255,.08),0 18px 45px rgba(0,0,0,.26),0 0 0 12px rgba(85,221,235,.025)}100%{opacity:1;transform:scale(1) rotate(0);box-shadow:inset 0 1px rgba(255,255,255,.08),0 18px 45px rgba(0,0,0,.26),0 0 0 3px rgba(85,221,235,.035)}}
+      @keyframes jlGlow{0%,8%{opacity:0;transform:scale(.6)}38%,82%{opacity:1;transform:scale(1.12)}100%{opacity:.45;transform:scale(1)}}
+      @keyframes jlOrbitReveal{0%,14%{opacity:0;transform:scale(.6)}38%,100%{opacity:1}}
+      @keyframes jlSpin{to{transform:rotate(360deg)}}
+      @keyframes jlSpinReverse{to{transform:rotate(-292deg)}}
+      @keyframes jlShine{from{left:-55%}to{left:130%}}
+      @keyframes jlTextIn{to{opacity:1;transform:translateY(0)}}
+      @keyframes jlFade{to{opacity:1}}
+      @keyframes jlLoad{to{width:100%}}
+
+      /* Safety boot card shown behind splash only if React has not mounted yet. */
+      .jl-boot{min-height:100vh;display:grid;place-items:center;padding:24px;box-sizing:border-box}
+      .jl-boot-card{width:min(430px,100%);padding:26px;text-align:center;color:#7894a4}
+      .jl-boot-card strong{display:block;color:#d9edf5;margin-bottom:5px}.jl-boot-card small{font-size:.8rem}
+
+      @media(max-width:420px){.jl-logo-stage{width:132px;height:132px}.jl-logo-mark{width:76px;height:76px;border-radius:23px;font-size:41px}.jl-brand-name{font-size:31px}.jl-tagline{font-size:9px}.jl-splash-inner{transform:translateY(-3vh)}}
+      @media(prefers-reduced-motion:reduce){.jl-logo-glow,.jl-orbit,.jl-logo-mark,.jl-logo-shine::after,.jl-brand-name,.jl-tagline,.jl-launch-line,.jl-launch-line::after,.jl-version{animation-duration:.01ms!important;animation-delay:0s!important;animation-iteration-count:1!important}.jl-orbit{opacity:.45}.jl-logo-mark,.jl-brand-name,.jl-tagline,.jl-launch-line,.jl-version{opacity:1;transform:none}}
+    </style>
+    <script>
+      window.__JULIENLAB_V7_BOOTED__ = false;
+      window.__JULIENLAB_LOCAL_FILE__ = location.protocol === 'file:';
+    </script>
+  </head>
+  <body>
+    <div id="jl-splash" aria-label="JulienLab démarre">
+      <div class="jl-splash-inner">
+        <div class="jl-logo-stage" aria-hidden="true">
+          <div class="jl-logo-glow"></div>
+          <div class="jl-orbit jl-orbit-a"></div>
+          <div class="jl-orbit jl-orbit-b"></div>
+          <div class="jl-logo-mark"><span>⚗</span><span class="jl-logo-shine"></span></div>
+        </div>
+        <h1 class="jl-brand-name">Julien<b>Lab</b></h1>
+        <p class="jl-tagline">Laboratoire virtuel de chimie</p>
+        <div class="jl-launch-line" aria-hidden="true"></div>
+        <div class="jl-version">Version 7</div>
+      </div>
+    </div>
+
+    <div id="root">
+      <div class="jl-boot"><div class="jl-boot-card"><strong>JulienLab V7</strong><small>Préparation du laboratoire…</small></div></div>
+    </div>
+
+    <script type="module" src="/src/main.tsx"></script>
+    <script>
+      (function(){
+        var splash = document.getElementById('jl-splash');
+        var splashMinimum = 2750;
+        var startedAt = Date.now();
+        var hasNavigated = false;
+
+        function closeSplash(){
+          var wait = Math.max(0, splashMinimum - (Date.now() - startedAt));
+          window.setTimeout(function(){
+            if (!splash) return;
+            splash.classList.add('jl-splash-exit');
+            window.setTimeout(function(){ splash && splash.remove(); }, 620);
+          }, wait);
+        }
+
+        if (window.__JULIENLAB_LOCAL_FILE__) {
+          /* Local phone/file preview: show the splash first, then open the standalone portal. */
+          window.setTimeout(function(){
+            if (hasNavigated) return;
+            hasNavigated = true;
+            if (splash) splash.classList.add('jl-splash-exit');
+            window.setTimeout(function(){ location.replace('./preview-v7-portal.html?mode=local&splash=done'); }, 470);
+          }, 2850);
+          return;
+        }
+
+        /* Vite/Vercel: React may mount immediately behind the splash. */
+        var bootCheck = window.setInterval(function(){
+          if (window.__JULIENLAB_V7_BOOTED__) {
+            window.clearInterval(bootCheck);
+            closeSplash();
+          }
+        }, 80);
+
+        /* If this is served by a basic server without Vite, avoid an endless blank screen. */
+        window.setTimeout(function(){
+          if (!window.__JULIENLAB_V7_BOOTED__ && !hasNavigated) {
+            hasNavigated = true;
+            window.clearInterval(bootCheck);
+            if (splash) splash.classList.add('jl-splash-exit');
+            window.setTimeout(function(){ location.replace('./preview-v7-portal.html?mode=fallback&splash=done'); }, 470);
+          }
+        }, 5200);
+      })();
+    </script>
+  </body>
+</html>

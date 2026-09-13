@@ -1,0 +1,30 @@
+{
+  "name": "julienlab-v7-full",
+  "version": "0.7.0-complete-migration",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "npm run sync:catalog && vite",
+    "build": "npm run sync:catalog && tsc -b && vite build",
+    "preview": "vite preview",
+    "check:api": "find api -name '*.js' -print0 | xargs -0 -n1 node --check",
+    "sync:catalog": "node scripts/sync-v6-catalog.mjs"
+  },
+  "dependencies": {
+    "@babylonjs/core": "^9.26.0",
+    "@babylonjs/loaders": "^9.26.0",
+    "@neondatabase/serverless": "^1.1.0",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "react-router-dom": "^7.9.1",
+    "xlsx": "^0.18.5",
+    "json5": "^2.2.3"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@vitejs/plugin-react": "^6.1.1",
+    "typescript": "^7.0.2",
+    "vite": "^8.2.2"
+  }
+}
